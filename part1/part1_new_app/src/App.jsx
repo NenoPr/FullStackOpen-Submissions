@@ -9,6 +9,10 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
+  const all = good + neutral + bad;
+  const average = (good + bad * -1) / all;
+  const positive = (good * 100) / all;
+
   return (
     <div>
       <h1>give feedback</h1>
@@ -18,9 +22,12 @@ const App = () => {
         <Button func={setBad} state={bad} text="bad" />
       </div>
       <h1>statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
+      <div>good {good}</div>
+      <div>neutral {neutral}</div>
+      <div>bad {bad}</div>
+      <div>all {all}</div>
+      <div>average {average}</div>
+      <div>positive {positive} %</div>
     </div>
   );
 };
