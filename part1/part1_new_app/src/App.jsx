@@ -8,15 +8,21 @@ const Statistics = (props) => {
   return (
     <>
       <h1>statistics</h1>
-      <div>good {props.good}</div>
-      <div>neutral {props.neutral}</div>
-      <div>bad {props.bad}</div>
-      <div>all {props.all}</div>
-      <div>average {props.average}</div>
-      <div>positive {props.positive} %</div>
+      <StatisticsLine text={"good"} value={props.good} />
+      <StatisticsLine text={"neutral"} value={props.neutral} />
+      <StatisticsLine text={"bad"} value={props.bad} />
+      <StatisticsLine text={"all"} value={props.all} />
+      <StatisticsLine text={"average"} value={props.average} />
+      <StatisticsLine text={"positive"} value={props.positive} />
     </>
   );
 };
+
+const StatisticsLine = (props) => (
+  <div>
+    {props.text} {props.value} {props.text === "positive" ? " %" : ""}
+  </div>
+);
 
 const App = () => {
   const [good, setGood] = useState(0);
