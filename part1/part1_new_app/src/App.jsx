@@ -85,6 +85,15 @@ const App = () => {
     setVotes(newVotes);
   }
 
+  let highestVotedAnecdote = 0;
+  const keys = Object.keys(votes);
+  for (const item of keys) {
+    if (votes[item] > votes[highestVotedAnecdote]) {
+      highestVotedAnecdote = item;
+    }
+  }
+  console.log(highestVotedAnecdote);
+
   return (
     <div>
       <h1>give feedback</h1>
@@ -106,6 +115,7 @@ const App = () => {
         <p>No feedback given</p>
       )}
       <br />
+      <h1>Anecdote of the day</h1>
       <div>{anecdotes[selected]}</div>
       <div>has {votes[selected]} votes</div>
       <button onClick={handleVotes}>vote</button>
@@ -116,6 +126,9 @@ const App = () => {
       >
         next anecdote
       </button>
+      <h1>Anecdote with the most votes</h1>
+      <div>{anecdotes[highestVotedAnecdote]}</div>
+      <div>has {votes[highestVotedAnecdote]} votes</div>
     </div>
   );
 };
