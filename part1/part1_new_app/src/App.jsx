@@ -8,20 +8,42 @@ const Statistics = (props) => {
   return (
     <>
       <h1>statistics</h1>
-      <StatisticsLine text={"good"} value={props.good} />
-      <StatisticsLine text={"neutral"} value={props.neutral} />
-      <StatisticsLine text={"bad"} value={props.bad} />
-      <StatisticsLine text={"all"} value={props.all} />
-      <StatisticsLine text={"average"} value={props.average} />
-      <StatisticsLine text={"positive"} value={props.positive} />
+      <table>
+        <tr>
+          <StatisticsLine text={"good"} value={props.good} />
+        </tr>
+        <tr>
+          <StatisticsLine text={"neutral"} value={props.neutral} />
+        </tr>
+        <tr>
+          <StatisticsLine text={"bad"} value={props.bad} />
+        </tr>
+        <tr>
+          <StatisticsLine text={"all"} value={props.all} />
+        </tr>
+        <tr>
+          <StatisticsLine text={"average"} value={props.average} />
+        </tr>
+        <tr>
+          <StatisticsLine text={"positive"} value={props.positive} />
+        </tr>
+      </table>
     </>
   );
 };
 
 const StatisticsLine = (props) => (
-  <div>
-    {props.text} {props.value} {props.text === "positive" ? " %" : ""}
-  </div>
+  <>
+    <td>{props.text}</td>
+    <td>
+      {props.text === "average"
+        ? props.value.toFixed(1)
+        : props.text === "positive"
+          ? props.value.toFixed(2)
+          : props.value}
+      {props.text === "positive" ? " %" : ""}
+    </td>
+  </>
 );
 
 const App = () => {
