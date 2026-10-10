@@ -9,24 +9,26 @@ const Statistics = (props) => {
     <>
       <h1>statistics</h1>
       <table>
-        <tr>
-          <StatisticsLine text={"good"} value={props.good} />
-        </tr>
-        <tr>
-          <StatisticsLine text={"neutral"} value={props.neutral} />
-        </tr>
-        <tr>
-          <StatisticsLine text={"bad"} value={props.bad} />
-        </tr>
-        <tr>
-          <StatisticsLine text={"all"} value={props.all} />
-        </tr>
-        <tr>
-          <StatisticsLine text={"average"} value={props.average} />
-        </tr>
-        <tr>
-          <StatisticsLine text={"positive"} value={props.positive} />
-        </tr>
+        <tbody>
+          <tr>
+            <StatisticsLine text={"good"} value={props.good} />
+          </tr>
+          <tr>
+            <StatisticsLine text={"neutral"} value={props.neutral} />
+          </tr>
+          <tr>
+            <StatisticsLine text={"bad"} value={props.bad} />
+          </tr>
+          <tr>
+            <StatisticsLine text={"all"} value={props.all} />
+          </tr>
+          <tr>
+            <StatisticsLine text={"average"} value={props.average} />
+          </tr>
+          <tr>
+            <StatisticsLine text={"positive"} value={props.positive} />
+          </tr>
+        </tbody>
       </table>
     </>
   );
@@ -62,10 +64,26 @@ const App = () => {
     "The only way to go fast, is to go well.",
   ];
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState({
+    0: 1,
+    1: 3,
+    2: 4,
+    3: 2,
+    4: 9,
+    5: 8,
+    6: 7,
+    7: 5,
+  });
 
   const all = good + neutral + bad;
   const average = (good + bad * -1) / all;
   const positive = (good * 100) / all;
+
+  function handleVotes() {
+    const newVotes = { ...votes };
+    newVotes[selected] += 1;
+    setVotes(newVotes);
+  }
 
   return (
     <div>
@@ -87,8 +105,15 @@ const App = () => {
       ) : (
         <p>No feedback given</p>
       )}
-      <p>{anecdotes[selected]}</p>
-      <button onClick={() => setSelected(Math.floor(Math.random() * 7))}>
+      <br />
+      <div>{anecdotes[selected]}</div>
+      <div>has {votes[selected]} votes</div>
+      <button onClick={handleVotes}>vote</button>
+      <button
+        onClick={() =>
+          setSelected(Math.floor(Math.random() * anecdotes.length))
+        }
+      >
         next anecdote
       </button>
     </div>
