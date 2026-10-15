@@ -6,8 +6,16 @@ const App = () => {
 
   const handleAddPerson = (event) => {
     event.preventDefault();
-    const newPerson = { name: newName };
-    setPersons(persons.concat(newPerson));
+    let checkDuplicate = false;
+    persons.map((person) => {
+      if (newName === person.name) checkDuplicate = true;
+    });
+    if (!checkDuplicate) {
+      const newPerson = { name: newName };
+      setPersons(persons.concat(newPerson));
+    } else {
+      alert(`${newName} is already added to phonebook`);
+    }
     setNewName("");
   };
 
@@ -16,7 +24,11 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={handleAddPerson}>
         <div>
-          name: <input onChange={(event) => setNewName(event.target.value)} />
+          name:{" "}
+          <input
+            value={newName}
+            onChange={(event) => setNewName(event.target.value)}
+          />
         </div>
         <div>
           <button type="submit">add</button>
