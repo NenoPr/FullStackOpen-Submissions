@@ -49,6 +49,16 @@ const App = () => {
     setNewNumber("");
   };
 
+  const handleDeletePerson = (person) => {
+    console.log(person.id);
+    if (window.confirm(`Delete ${person.name}`)) {
+      personsService.remove(person.id).then((response) => {
+        console.log(response);
+        setPersons(persons.filter((person) => person.id !== response.id));
+      });
+    }
+  };
+
   const PersonsFilter =
     search === ""
       ? persons
@@ -68,7 +78,10 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons PersonsFilter={PersonsFilter} />
+      <Persons
+        PersonsFilter={PersonsFilter}
+        handleDeletePerson={handleDeletePerson}
+      />
     </div>
   );
 };

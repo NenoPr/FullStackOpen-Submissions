@@ -1,5 +1,6 @@
 const PersonForm = ({
   handleAddPerson,
+  handleDeletePerson,
   newName,
   setNewName,
   newNumber,
