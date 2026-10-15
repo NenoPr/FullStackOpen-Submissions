@@ -29,6 +29,10 @@ const App = () => {
         number: newNumber,
         id: persons.at(-1).id + 1,
       };
+
+      axios
+        .post("http://localhost:3002/persons", newPerson)
+        .then((response) => console.log(response));
       setPersons(persons.concat(newPerson));
     } else {
       alert(`${newName} is already added to phonebook`);
