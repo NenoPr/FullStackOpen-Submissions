@@ -23,17 +23,31 @@ const App = () => {
 
   const handleAddPerson = (event) => {
     event.preventDefault();
-    const checkDuplicate = persons.some((person) => person.name === newName);
+    // const checkDuplicateName = persons.some(
+    //   (person) => person.name === newName,
+    // );
+    const existingPerson = persons.find((person) => person.name === newName);
 
-    if (checkDuplicate) {
-      alert(`${newName} is already added to phonebook`);
+    if (existingPerson) {
+      if (existingPerson.number !== newNumber) {
+        if (
+          window.confirm(
+            `${existingPerson.name} is already in the phonebook, replace the old number with a new one?`,
+          )
+        ) {
+          handleUpdatePerson(existingPerson);
+          setNewName("");
+          setNewNumber("");
+        }
+      } else {
+        alert(`${newName} is already added to phonebook`);
+      }
       return;
     }
 
     const newPerson = {
       name: newName,
       number: newNumber,
-      id: persons.length,
     };
 
     personsService
@@ -54,9 +68,28 @@ const App = () => {
     if (window.confirm(`Delete ${person.name}`)) {
       personsService.remove(person.id).then((response) => {
         console.log(response);
-        setPersons(persons.filter((person) => person.id !== response.id));
+        setPersons((prevPersons) =>
+          prevPersons.filter((item) => item.id !== person.id),
+        );
       });
     }
+  };
+
+  const handleUpdatePerson = (existingPerson) => {
+    const updatedPerson = {
+      ...existingPerson,
+      number: newNumber,
+    };
+
+    personsService
+      .update(existingPerson.id, updatedPerson)
+      .then((returnedPerson) => {
+        setPersons((prevPersons) =>
+          prevPersons.map((person) =>
+            person.id === returnedPerson.id ? returnedPerson : person,
+          ),
+        );
+      });
   };
 
   const PersonsFilter =

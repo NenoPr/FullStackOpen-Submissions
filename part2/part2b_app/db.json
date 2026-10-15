@@ -22,8 +22,18 @@
     },
     {
       "name": "qwe",
-      "number": "123",
+      "number": "098 457 4213",
       "id": "AoebioeBdik"
+    },
+    {
+      "name": "asd",
+      "number": "099 456 7834",
+      "id": "yKkr2Vyaw-8"
+    },
+    {
+      "name": "ccc",
+      "number": "097 546 1278",
+      "id": "tFQ7KeIR_0M"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
