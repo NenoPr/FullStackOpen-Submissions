@@ -2,7 +2,7 @@ const Persons = ({ PersonsFilter }) => {
   return (
     <>
       {PersonsFilter.map((person) => (
-        <div key={person.name}>
+        <div key={person.id}>
           <div>
             {person.name} - <span>{person.number}</span>
           </div>

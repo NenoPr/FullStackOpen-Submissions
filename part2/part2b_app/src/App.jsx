@@ -3,6 +3,7 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import axios from "axios";
+import personsService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,32 +12,39 @@ const App = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3002/persons").then((response) => {
-      console.log("persons data ", response.data);
-      setPersons(response.data);
-    });
+    personsService
+      .getAll()
+      .then((initialPersons) => setPersons(initialPersons));
+    // axios.get("http://localhost:3002/persons").then((response) => {
+    //   console.log("persons data ", response.data);
+    //   setPersons(response.data);
+    // });
   }, []);
 
   const handleAddPerson = (event) => {
     event.preventDefault();
-    let checkDuplicate = false;
-    persons.map((person) => {
-      if (newName === person.name) checkDuplicate = true;
-    });
-    if (!checkDuplicate) {
-      const newPerson = {
-        name: newName,
-        number: newNumber,
-        id: persons.at(-1).id + 1,
-      };
+    const checkDuplicate = persons.some((person) => person.name === newName);
 
-      axios
-        .post("http://localhost:3002/persons", newPerson)
-        .then((response) => console.log(response));
-      setPersons(persons.concat(newPerson));
-    } else {
+    if (checkDuplicate) {
       alert(`${newName} is already added to phonebook`);
+      return;
     }
+
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+      id: persons.length,
+    };
+
+    personsService
+      .create(newPerson)
+      .then((person) => setPersons(persons.concat(person)));
+
+    // axios
+    //   .post("http://localhost:3002/persons", newPerson)
+    //   .then((response) => console.log(response));
+    // setPersons(persons.concat(newPerson));
+
     setNewName("");
     setNewNumber("");
   };
