@@ -2,14 +2,16 @@ import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import axios from "axios";
 import personsService from "./services/persons";
+import Notification from "./components/Notification";
+import "./index.css";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     personsService
@@ -38,6 +40,10 @@ const App = () => {
           handleUpdatePerson(existingPerson);
           setNewName("");
           setNewNumber("");
+          setMessage(`${existingPerson.name}'s number has been updated.`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
         }
       } else {
         alert(`${newName} is already added to phonebook`);
@@ -61,6 +67,10 @@ const App = () => {
 
     setNewName("");
     setNewNumber("");
+    setMessage(`${newPerson.name} has been added to the notebook.`);
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
   };
 
   const handleDeletePerson = (person) => {
@@ -73,6 +83,10 @@ const App = () => {
         );
       });
     }
+    setMessage(`${person.name} has been deleted from the phonebook.`);
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
   };
 
   const handleUpdatePerson = (existingPerson) => {
@@ -100,6 +114,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter search={search} setSearch={setSearch} />
       <h1>add a new</h1>
       <PersonForm
