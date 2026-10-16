@@ -12,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     personsService
@@ -76,17 +77,29 @@ const App = () => {
   const handleDeletePerson = (person) => {
     console.log(person.id);
     if (window.confirm(`Delete ${person.name}`)) {
-      personsService.remove(person.id).then((response) => {
-        console.log(response);
-        setPersons((prevPersons) =>
-          prevPersons.filter((item) => item.id !== person.id),
-        );
-      });
+      personsService
+        .remove(person.id)
+        .then((response) => {
+          console.log(response);
+          setPersons((prevPersons) =>
+            prevPersons.filter((item) => item.id !== person.id),
+          );
+          setMessage(`${person.name} has been deleted from the phonebook.`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+        })
+        .catch((error) => {
+          console.log(error);
+          setErrorMessage(
+            `${person.name} has been already been deleted from the phonebook.`,
+          );
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+          return;
+        });
     }
-    setMessage(`${person.name} has been deleted from the phonebook.`);
-    setTimeout(() => {
-      setMessage(null);
-    }, 5000);
   };
 
   const handleUpdatePerson = (existingPerson) => {
@@ -114,7 +127,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} errorMessage={errorMessage} />
       <Filter search={search} setSearch={setSearch} />
       <h1>add a new</h1>
       <PersonForm

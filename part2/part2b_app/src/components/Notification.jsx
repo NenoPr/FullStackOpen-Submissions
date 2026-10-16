@@ -1,7 +1,13 @@
 import "../index.css";
 
-const Notification = ({ message }) => {
-  return message ? <div className="notification">{message}</div> : "";
+const Notification = ({ message, errorMessage }) => {
+  return message ? (
+    <div className="notification">{message}</div>
+  ) : errorMessage ? (
+    <div className="error">{errorMessage}</div>
+  ) : (
+    ""
+  );
 };
 
 export default Notification;
