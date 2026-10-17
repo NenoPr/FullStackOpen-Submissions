@@ -55,7 +55,16 @@ function App() {
         <p>No matches found</p>
       ) : (
         filteredCountries.map((country) => (
-          <div key={country.cca3}>{country.name.common}</div>
+          <div key={country.cca3}>
+            {country.name.common}{" "}
+            <button
+              onClick={() => {
+                setSearch(country.name.common);
+              }}
+            >
+              Show
+            </button>
+          </div>
         ))
       )}
     </div>
