@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
 function App() {
   const [search, setSearch] = useState("");
   const [countries, setCountries] = useState([]);
+  const [weather, setWeather] = useState("");
 
   useEffect(() => {
     axios
@@ -17,6 +19,32 @@ function App() {
   const filteredCountries = countries.filter((country) =>
     country.name.common.toLowerCase().includes(search.toLowerCase()),
   );
+  const selectedCountry =
+    filteredCountries.length === 1 ? filteredCountries[0] : null;
+
+  const latitude = selectedCountry?.capitalInfo?.latlng?.[0];
+  const longitude = selectedCountry?.capitalInfo?.latlng?.[1];
+
+  useEffect(() => {
+    if (latitude === undefined || longitude === undefined) {
+      setWeather(null);
+      return;
+    }
+
+    setWeather(null);
+
+    axios
+      .get(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`,
+      )
+      .then((response) => {
+        console.log(response.data);
+        setWeather(response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch weather:", error);
+      });
+  }, [latitude, longitude]);
 
   return (
     <div>
@@ -50,6 +78,21 @@ function App() {
             alt={`Flag of ${filteredCountries[0].name.common}`}
             width="150"
           />
+          <h2>Weather in {filteredCountries[0].capital?.[0]}</h2>
+          {weather ? (
+            <>
+              <div>Temperature {weather.main.temp} Celsius</div>
+
+              <img
+                src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+                alt={weather.weather[0].description}
+              />
+
+              <div>Wind: {weather.wind.speed} m/s</div>
+            </>
+          ) : (
+            "Loading weather..."
+          )}
         </div>
       ) : filteredCountries.length === 0 ? (
         <p>No matches found</p>
