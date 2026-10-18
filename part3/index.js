@@ -42,6 +42,15 @@ app.post("/api/persons", (request, response) => {
   if (!body.number) {
     return response.status(400).json({ error: "missing number" });
   }
+
+  persons.map((person) => {
+    if (person.name === body.name) {
+      return response
+        .status(400)
+        .json({ error: "the name already exists in phonebook" });
+    }
+  });
+
   const person = {
     id: String(Math.floor(Math.random() * 10000)),
     name: body.name,
