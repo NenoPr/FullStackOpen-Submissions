@@ -33,6 +33,26 @@ app.get("/api/persons", (request, response) => {
   response.json(persons);
 });
 
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
+
+  if (!body.name) {
+    return response.status(400).json({ error: "name missing" });
+  }
+  if (!body.number) {
+    return response.status(400).json({ error: "missing number" });
+  }
+  const person = {
+    id: String(Math.floor(Math.random() * 10000)),
+    name: body.name,
+    number: body.number,
+  };
+
+  persons = persons.concat(person);
+  console.log(persons, person);
+  response.json(person);
+});
+
 app.get("/info", (request, response) => {
   response.send(
     `<div>
