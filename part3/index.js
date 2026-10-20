@@ -31,6 +31,17 @@ let persons = [
   },
 ];
 
+morgan.token("body", (request) => {
+  if (request.method === "POST") {
+    return JSON.stringify(request.body);
+  }
+  return "";
+});
+
+app.use(
+  morgan(":method :url :status :response-time ms - :res[content-length] :body"),
+);
+
 app.get("/api/persons", (request, response) => {
   response.json(persons);
 });
