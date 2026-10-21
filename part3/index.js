@@ -123,9 +123,16 @@ app.get("/api/persons/:id", (request, response) => {
   }
 });
 
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
-  persons = persons.filter((person) => person.id !== id);
+  // persons = persons.filter((person) => person.id !== id);
 
-  response.status(204).end();
+  Person.findByIdAndDelete(id)
+    .then((person) => {
+      if (!person) {
+        return response.status(404).end();
+      }
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
 });
