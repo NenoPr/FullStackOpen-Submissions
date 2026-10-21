@@ -1,7 +1,10 @@
+require("dotenv").config();
+
 const path = require("path");
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const Person = require("./models/person");
 
 const app = express();
 
@@ -50,7 +53,16 @@ app.use(
 );
 
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Person.find({})
+    .then((persons) => {
+      response.json(persons);
+    })
+    .catch((error) => {
+      console.error(error);
+      response.status(500).json({
+        error: "Failed to retrieve persons",
+      });
+    });
 });
 
 app.post("/api/persons", (request, response) => {
