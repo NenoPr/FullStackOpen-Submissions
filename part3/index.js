@@ -70,22 +70,11 @@ app.post("/api/persons", (request, response, next) => {
     return response.status(400).json({ error: "missing number" });
   }
 
-  // persons.map((person) => {
-  //   if (person.name === body.name) {
-  //     return response
-  //       .status(400)
-  //       .json({ error: "the name already exists in phonebook" });
-  //   }
-  // });
-
   const person = new Person({
-    // id: String(Math.floor(Math.random() * 10000)),
     name: body.name,
     number: body.number,
   });
 
-  // persons = persons.concat(person);
-  // response.json(person);
   person
     .save()
     .then((savedPerson) => {
@@ -93,6 +82,28 @@ app.post("/api/persons", (request, response, next) => {
     })
     .catch(next);
   console.log(persons, person);
+});
+
+app.put("/api/persons/:id", (request, response, next) => {
+  const { name, number } = request.body;
+
+  const updatedPerson = {
+    name,
+    number,
+  };
+
+  Person.findByIdAndUpdate(request.params.id, updatedPerson, {
+    new: true,
+    runValidators: true,
+  })
+    .then((person) => {
+      if (!person) {
+        return response.status(404).end();
+      }
+
+      response.json(person);
+    })
+    .catch(next);
 });
 
 app.get("/info", (request, response) => {
