@@ -75,23 +75,32 @@ app.post("/api/persons", (request, response) => {
     return response.status(400).json({ error: "missing number" });
   }
 
-  persons.map((person) => {
-    if (person.name === body.name) {
-      return response
-        .status(400)
-        .json({ error: "the name already exists in phonebook" });
-    }
-  });
+  // persons.map((person) => {
+  //   if (person.name === body.name) {
+  //     return response
+  //       .status(400)
+  //       .json({ error: "the name already exists in phonebook" });
+  //   }
+  // });
 
-  const person = {
-    id: String(Math.floor(Math.random() * 10000)),
+  const person = new Person({
+    // id: String(Math.floor(Math.random() * 10000)),
     name: body.name,
     number: body.number,
-  };
+  });
 
-  persons = persons.concat(person);
+  // persons = persons.concat(person);
+  // response.json(person);
+  person
+    .save()
+    .then((savedPerson) => {
+      response.status(201).json(savedPerson);
+    })
+    .catch((error) => {
+      console.error(error);
+      response.status(500).json({ error: "Could not save person" });
+    });
   console.log(persons, person);
-  response.json(person);
 });
 
 app.get("/info", (request, response) => {
