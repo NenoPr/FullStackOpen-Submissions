@@ -52,20 +52,15 @@ app.use(
   morgan(":method :url :status :response-time ms - :res[content-length] :body"),
 );
 
-app.get("/api/persons", (request, response) => {
+app.get("/api/persons", (request, response, next) => {
   Person.find({})
     .then((persons) => {
       response.json(persons);
     })
-    .catch((error) => {
-      console.error(error);
-      response.status(500).json({
-        error: "Failed to retrieve persons",
-      });
-    });
+    .catch(next);
 });
 
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const body = request.body;
 
   if (!body.name) {
@@ -96,10 +91,7 @@ app.post("/api/persons", (request, response) => {
     .then((savedPerson) => {
       response.status(201).json(savedPerson);
     })
-    .catch((error) => {
-      console.error(error);
-      response.status(500).json({ error: "Could not save person" });
-    });
+    .catch(next);
   console.log(persons, person);
 });
 
@@ -136,3 +128,21 @@ app.delete("/api/persons/:id", (request, response, next) => {
     })
     .catch((error) => next(error));
 });
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).json({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).json({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
